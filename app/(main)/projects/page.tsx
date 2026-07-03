@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { Zap } from "lucide-react";
-import { ProjectCard } from "@/components/ProjectCard";
+import {ProjectCard} from "@/components/ProjectCard";
 import Link from "next/link";
 import { getUserProjects } from "@/actions/projects";
 import { BlueTitle } from "@/components/reusables";
@@ -60,7 +60,8 @@ export default async function ProjectsPage() {
         {projects.length === 0 ? (
           <EmptyState />
         ) : (
-          <ProjectCard projects={projects} />
+          // <ProjectCard projects={projects} />
+          <ProjectCard projects = {projects} />
         )}
       </div>
     </main>

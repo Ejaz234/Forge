@@ -85,7 +85,6 @@ interface CodePanelProps {
   onFixError: (error: string) => Promise<void>;
   onFilePatch: (patches: FileData) => void;
   appTitle: string | null;
-  isImproving: boolean;
   isProUser: boolean;
 }
 
@@ -405,7 +404,6 @@ export function CodePanel({
   onFixError,
   onFilePatch: _onFilePatch,
   appTitle,
-  isImproving,
   isProUser,
 }: CodePanelProps) {
   const [activeTab, setActiveTab] = useState<ActiveTab>("preview");

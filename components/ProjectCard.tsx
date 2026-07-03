@@ -1,81 +1,66 @@
 "use client";
 
-import { useTransition } from "react";
-import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
-import { toast } from "sonner";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { deleteProject, ProjectSummary } from "@/actions/projects";
+import Link from "next/link";
+import { formatDistanceToNow } from "date-fns";
+import { Trash2, MessageSquare } from "lucide-react";
+import { ProjectSummary } from "@/actions/projects";
+import { DeleteProjectModal } from "./DeleteProjectModal";
 
-// ─── Props ────────────────────────────────────────────────────────────────────
-
-interface DeleteProjectModalProps {
-  project: ProjectSummary;
-  children: React.ReactNode;
+interface ProjectCardProps {
+  projects: ProjectSummary[];
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
-
-export function DeleteProjectModal({
-  project,
-  children,
-}: DeleteProjectModalProps) {
-  const router = useRouter();
-  const [isPending, startTransition] = useTransition();
-
-  const handleDelete = () => {
-    startTransition(async () => {
-      try {
-        await deleteProject(project.id);
-        toast.success("Project deleted.");
-        router.refresh();
-      } catch {
-        toast.error("Failed to delete project. Please try again.");
-      }
-    });
-  };
-
+export function ProjectCard({ projects }: ProjectCardProps) {
   return (
-    <Dialog>
-      <DialogTrigger className="cursor-pointer">{children}</DialogTrigger>
-      <DialogContent className="border-white/8 bg-[#111111] text-white sm:max-w-sm">
-        <DialogHeader>
-          <DialogTitle className="text-sm font-semibold text-white/90">
-            Delete project?
-          </DialogTitle>
-          <DialogDescription className="text-xs text-white/35">
-            &ldquo;{project.title ?? "Untitled project"}&rdquo; will be
-            permanently deleted. This cannot be undone.
-          </DialogDescription>
-        </DialogHeader>
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {projects.map((project) => {
+        const title = project.title ?? "Untitled project";
+        const timeAgo = formatDistanceToNow(new Date(project.updatedAt), {
+          addSuffix: true,
+        });
+        const msgCount = Math.floor(project.messageCount / 2);
 
-        <DialogFooter className="gap-2">
-          <DialogClose>
-            <span className="text-xs text-white/40 hover:text-white/70 pr-2">
-              Cancel
-            </span>
-          </DialogClose>
-          <Button
-            size="sm"
-            onClick={handleDelete}
-            disabled={isPending}
-            className="h-8 rounded-full bg-red-500/90 px-4 text-xs font-semibold text-white hover:bg-red-500 disabled:opacity-50"
+        return (
+          <div
+            key={project.id}
+            className="group relative flex flex-col rounded-xl border border-white/6 bg-[#0f0f0f] p-4 transition-colors hover:border-white/10 hover:bg-[#111111]"
           >
-            {isPending && <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />}
-            Delete
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+            <Link
+              href={`/workspace?id=${project.id}`}
+              className="absolute inset-0 rounded-xl"
+              aria-label={`Open ${title}`}
+            />
+
+            {/* Top row */}
+            <div className="mb-2 flex items-start justify-between gap-2">
+              <p className="line-clamp-1 text-sm font-medium leading-snug text-white/80">
+                {title}
+              </p>
+              <DeleteProjectModal project={project}>
+                <span className="relative z-10 text-white/20 hover:text-red-400">
+                  <Trash2 className="h-3.5 w-3.5" />
+                </span>
+              </DeleteProjectModal>
+            </div>
+
+            {/* First prompt preview */}
+            {project.firstPrompt && (
+              <p className="mb-3 line-clamp-2 text-[12px] leading-relaxed text-white/30">
+                {project.firstPrompt}
+              </p>
+            )}
+
+            {/* Meta */}
+            <div className="mt-auto flex items-center gap-3 pt-2 border-t border-white/4">
+              <span className="flex items-center gap-1 text-[11px] text-white/25">
+                <MessageSquare className="h-3 w-3" />
+                {msgCount} message{msgCount !== 1 ? "s" : ""}
+              </span>
+              <span className="text-[11px] text-white/20">{timeAgo}</span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 }
