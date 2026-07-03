@@ -16,7 +16,7 @@ const Header = async() => {
       <nav className="mx-auto flex h-full max-w-7xl items-center justify-between px-4 sm:px-6">
         <Link href="/">
           <Image
-            src={"/logo.png"}
+            src={"/Logo.png"}
             alt="Forge Logo"
             width={100}
             height={100}
