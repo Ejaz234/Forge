@@ -2,7 +2,7 @@
 
 Turn your ideas into fully functional React applications using AI.
 
-Forge is a modern AI-powered app builder inspired by Bolt.new and Lovable. Simply describe your idea in natural language, and Forge generates a production-ready React application with a live preview, editable code, project history, and instant downloads.
+Forge is a modern full-stack AI application builder that transforms natural language prompts into production-ready React applications. It features live preview, editable code, AI-powered iterations, image uploads, authentication, project history, and one-click downloads.
 
 ## ✨ Features
 
