@@ -18,7 +18,11 @@ const aj = arcjet({
     shield({ mode: "LIVE" }),
     detectBot({
       mode: "LIVE",
-      allow: ["CATEGORY:SEARCH_ENGINE", "CATEGORY:PREVIEW"],
+      allow: [
+        "CATEGORY:SEARCH_ENGINE",
+        "CATEGORY:PREVIEW",
+        "LINKEDIN_CRAWLER", // 👈 add this
+      ],
     }),
   ],
 });
